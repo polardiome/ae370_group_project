@@ -1,4 +1,5 @@
 # AE370 Group Project 1
+https://docs.google.com/document/d/12XFq34vSOm7k19JTvr-Zwvom3pJGrt-xf3V_f78Y1HE/edit?tab=t.0
 
 ## The Objective
 Satellites orbiting Earth are influenced by atmospheric drag and Earth’s nonspherical gravity, meaning corrective thruster maneuvers are required to maintain a desired orbit. We will study a satellite’s trajectory across time and the level of corrective thrust involved in maintaining its orbit. 
@@ -23,42 +24,42 @@ $$
 \vec{a}_g=-\frac{\mu}{r^3}\vec{r},
 $$
 
-where =GM is Earth's gravitational parameter and $r=\|\vec r\|$ is the distance from Earth's center.
+where $\mu=GM$ is Earth's gravitational parameter and $r=|\vec r|$ is the distance from Earth's center.
 
 Atmospheric drag is modeled by
 
 $$
-\vec{a}_{\text{drag}}=-\frac{C_D A\rho(h)}{2m}\|\vec{v}_{\text{rel}}\|\vec{v}_{\text{rel}},
+\vec{a}{\text{drag}}=-\frac{C_D A\rho(h)}{2m}|\vec{v}{\text{rel}}|\vec{v}_{\text{rel}},
 $$
 
-where CD is the drag coefficient, A is the cross-sectional area, m is the satellite's mass, and vrel is its velocity relative to the atmosphere. Atmospheric density is approximated by
+where $C_D$ is the drag coefficient, $A$ is the cross-sectional area, $m$ is the satellite's mass, and $\vec{v}_{\text{rel}}$ is its velocity relative to the atmosphere. Atmospheric density is approximated by
 
 $$
 \rho(h)=\rho_0 e^{-(h-h_0)/H},
 $$
 
-where h=r-RE is altitude, 0 is the reference density at altitude h0, and H is the scale height.
+where $h=r-R_E$ is altitude, $\rho_0$ is the reference density at altitude $h_0$, and $H$ is the scale height.
 
-Earth's oblateness introduces the J2 perturbation:
+Earth's oblateness introduces the $J_2$ perturbation:
 
 $$
 \vec{a}_{J_2}=\frac{3J_2\mu R_E^2}{2r^5}
 \begin{bmatrix}
-x(5z^2/r^2-1)\\
-y(5z^2/r^2-1)\\
+x(5z^2/r^2-1)\
+y(5z^2/r^2-1)\
 z(5z^2/r^2-3)
 \end{bmatrix},
 $$
 
-where J21.0826310-3 accounts for Earth's equatorial bulge.
+where $J_2\approx1.08263\times10^{-3}$ accounts for Earth's equatorial bulge.
 
 Finally, corrective thrust is represented by
 
 $$
-\vec{a}_{\text{thrust}}=\frac{\vec F_{\text{thrust}}(t)}{m},
+\vec{a}{\text{thrust}}=\frac{\vec F{\text{thrust}}(t)}{m},
 $$
 
-where Fthrust(t) is the applied thrust force.
+where $\vec F_{\text{thrust}}(t)$ is the applied thrust force.
 
 Together, these terms form a coupled nonlinear ODE system with time as its only independent variable. The system generally requires numerical integration.
 
@@ -79,12 +80,11 @@ v_{\mathrm{rel}}v_{\mathrm{rel},y}
 $$
 
 $$
-\ddot{\mathbf{r}} =
--\frac{\mu}{r^3}\mathbf{r}
+\ddot{\vec{r}} =
+-\frac{\mu}{r^3}\vec{r}
 -\frac{C_D A \rho(h)}{2m}
-\left|\mathbf{v}_{\mathrm{rel}}\right|
-\mathbf{v}_{\mathrm{rel}}
-+\mathbf{u}(t)
+\left|\vec{v}_{\mathrm{rel}}\right|
+\vec{v}_{\mathrm{rel}}
++\vec{u}(t)
 $$
-
-https://docs.google.com/document/d/12XFq34vSOm7k19JTvr-Zwvom3pJGrt-xf3V_f78Y1HE/edit?tab=t.0
+$$
