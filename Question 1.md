@@ -63,14 +63,9 @@ $$
 
 The solution is advanced as the weighted average of these slopes are:
 
- $$
-\boxed{
-\mathbf{u}_{n+1}
-=
-\mathbf{u}_n+
-\frac{\Delta t}{6}
-(k_1+2k_2+2k_3+k_4)
-}
+
+$$
+\boxed{\mathbf{u}_{n+1}=\mathbf{u}_n+\frac{\Delta t}{6}(k_1+2k_2+2k_3+k_4)}
 $$
 
 The four slopes can approximate the rate of change of the satellite’s state in different points within the time step. Their weighted average will provide an estimate of the satellite’s updated position and velocity. This will allow the trajectory to be calculated over the desired simulation period. The RK4 method has a truncation error of $O(\Delta t^5)$ and a global error of $O(\Delta t^4)$, this is assuming sufficiently smooth solutions and appropriate numerical stability. So, decreasing the time step will also be required to improve the accuracy of the computed trajectory.  RK4 will require 4 evaluations of the governing equations per time step, making it more expensive per step than Forward Euler or Heun’s method, but will be potentially more efficient for a specified accuracy. 
