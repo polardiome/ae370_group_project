@@ -51,13 +51,10 @@ In order to approximate the satellite position and velocity at each time step, u
 
 $$
 \begin{aligned}
-k_1 &= f(t_n,\mathbf{u}_n)\\[6pt]
-k_2 &= f\left(t_n+\frac{\Delta t}{2},
-\mathbf{u}_n+\frac{\Delta t}{2}k_1\right)\\[6pt]
-k_3 &= f\left(t_n+\frac{\Delta t}{2},
-\mathbf{u}_n+\frac{\Delta t}{2}k_2\right)\\[6pt]
-k_4 &= f\left(t_n+\Delta t,
-\mathbf{u}_n+\Delta t k_3\right)
+k_1 &= f(t_n,\mathbf{u}_n) \\
+k_2 &= f\left(t_n+\frac{\Delta t}{2},\mathbf{u}_n+\frac{\Delta t}{2}k_1\right) \\
+k_3 &= f\left(t_n+\frac{\Delta t}{2},\mathbf{u}_n+\frac{\Delta t}{2}k_2\right) \\
+k_4 &= f\left(t_n+\Delta t,\mathbf{u}_n+\Delta t k_3\right)
 \end{aligned}
 $$
 
