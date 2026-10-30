@@ -1,169 +1,101 @@
-# AE370 Group Project 1
+# AE 370 Group Project 1: Numerical Study of a Perturbed Earth Orbit
 
-## The Objective
+Jiho Seo, Pranshu Bhardwaj, Adi Jha, Dmitry Moryakov. Fall 2026.
 
-Satellites orbiting Earth are influenced by atmospheric drag, Earth's nonspherical gravitational field, and gravitational perturbations from the Moon. These effects can change a satellite's trajectory over time and may require corrective thruster maneuvers to maintain a desired orbit. We will numerically study a satellite's trajectory, investigate how lunar gravity changes the predicted motion, and estimate the corrective thrust needed to maintain its orbit.
+We simulate a satellite in a planar, equatorial Earth orbit with a from-scratch RK4 integrator. We then measure how atmospheric drag, Earth's oblateness ($J_2$), and the Moon's gravity change the trajectory, and how much corrective $\Delta v$ is needed to hold the orbit. The full write-up is [`report.pdf`](report.pdf); its source is [`report.tex`](report.tex).
 
-## The Questions
+## Questions
 
 1. How does atmospheric drag affect the satellite's orbital trajectory over time?
 2. How does Earth's gravitational field, including the $J_2$ perturbation, affect the satellite's orbital trajectory?
-3. How does the Moon's gravitational influence change the satellite's trajectory, and how does that influence compare with atmospheric drag and $J_2$ at different altitudes?
-4. How does choosing the numerical method and time step affect the predicted trajectory, particularly when lunar gravity is included?
+3. How does the Moon's gravitational influence change the satellite's trajectory, and how does it compare with drag and $J_2$ at different altitudes?
+4. How do the numerical method and time step affect the predicted trajectory, particularly when lunar gravity is included?
 5. How much additional corrective thrust is required to maintain the desired orbit when the Moon's gravity is included?
 
-## The Equation
+## Repository contents
 
-We will model the satellite's acceleration using a second-order vector ordinary differential equation (ODE):
-
-$$
-\ddot{\vec r}=\vec a_g+\vec a_{\text{drag}}+\vec a_{J_2}+\vec a_{\text{Moon}}+\vec a_{\text{thrust}},
-$$
-
-where each term represents an acceleration due to a physical effect. The position $\vec r$ and velocity $\vec v=\dot{\vec r}$ are measured in an Earth-centered frame.
-
-### Earth's Central Gravity
-
-Newton's law of gravitation gives
-
-$$
-\vec a_g=-\frac{\mu_E}{r^3}\vec r,
-$$
-
-where $\mu_E=GM_E$ is Earth's gravitational parameter and $r=|\vec r|$ is the distance from Earth's center.
-
-### Atmospheric Drag
-
-Atmospheric drag is modeled by
-
-$$
-\vec a_{\text{drag}}=-\frac{C_D A\rho(h)}{2m}|\vec v_{\text{rel}}|\vec v_{\text{rel}},
-$$
-
-where $C_D$ is the drag coefficient, $A$ is the cross-sectional area, $m$ is the satellite's mass, and $\vec v_{\text{rel}}$ is its velocity relative to the atmosphere. Atmospheric density is approximated by
-
-$$
-\rho(h)=\rho_0 e^{-(h-h_0)/H},
-$$
-
-where $h=r-R_E$ is altitude, $\rho_0$ is the reference density at altitude $h_0$, and $H$ is the scale height. For a first approximation, the atmosphere may be treated as stationary in the Earth-centered frame; a more detailed model can account for atmospheric co-rotation.
-
-### Earth's $J_2$ Perturbation
-
-Earth's oblateness introduces the $J_2$ perturbation:
-
-$$
-\vec a_{J_2}=\frac{3J_2\mu_E R_E^2}{2r^5}
-\begin{bmatrix}
-x(5z^2/r^2-1)\\
-y(5z^2/r^2-1)\\
-z(5z^2/r^2-3)
-\end{bmatrix},
-$$
-
-where $J_2\approx1.08263\times10^{-3}$ accounts for Earth's equatorial bulge. This expression assumes the $z$-axis is aligned with Earth's rotation axis.
-
-### Lunar Gravitational Perturbation
-
-The Moon introduces an additional, time-dependent gravitational acceleration. In an Earth-centered frame, the *third-body* perturbation is
-
-$$
-\boxed{\vec a_{\text{Moon}}=\mu_M\left(\frac{\vec r_M(t)-\vec r}{|\vec r_M(t)-\vec r|^3}-\frac{\vec r_M(t)}{|\vec r_M(t)|^3}\right)},
-$$
-
-where $\mu_M\approx4902.8\ \mathrm{km^3/s^2}$ is the Moon's gravitational parameter and $\vec r_M(t)$ is the position of the Moon relative to Earth's center. The first term represents the Moon's pull on the satellite; the second subtracts the Moon's acceleration of Earth's center.
-
-For a simplified two-dimensional model, assume that the Moon moves in a circular orbit in the same plane as the satellite:
-
-$$
-\vec r_M(t)=D
-\begin{bmatrix}
-\cos(\omega_M t+\phi_0)\\
-\sin(\omega_M t+\phi_0)
-\end{bmatrix},
-\qquad \omega_M=\frac{2\pi}{T_M},
-$$
-
-with the approximate values
-
-| Parameter | Value |
+| File | Contents |
 | --- | --- |
-| Mean Earth–Moon distance, $D$ | $384{,}400\ \mathrm{km}$ |
-| Lunar orbital period, $T_M$ | $27.32\ \mathrm{days}$ |
-| Lunar angular speed, $\omega_M$ | $2.662\times10^{-6}\ \mathrm{rad/s}$ |
-| Initial lunar phase, $\phi_0$ | Chosen initial angle |
+| `simulation.py` | Equations of motion, RK4 and Heun integrators, validation checks, all experiments, and figure generation |
+| `results.json` | Every number quoted in the report, written by `simulation.py` |
+| `figures/` | The five report figures (stability, validation, Earth effects, lunar effect, maintenance) |
+| `report.tex`, `report.pdf` | Report source and compiled PDF |
+| `requirements.txt` | Python dependencies (NumPy and Matplotlib) |
 
-This is a simplified prescribed Moon orbit, not a numerical solution for the Moon's motion. It neglects the Moon's orbital eccentricity and inclination. A more realistic three-dimensional model could use a time-dependent lunar position from ephemeris data.
+## How to run
 
-### Corrective Thrust
+```bash
+pip install -r requirements.txt
+python simulation.py
+```
 
-Corrective thrust is represented by
+This regenerates `results.json` and everything in `figures/` in about one minute. Then compile `report.tex` with LaTeX (for example `pdflatex report.tex`, run twice so cross-references resolve) to rebuild the PDF.
 
-$$
-\vec a_{\text{thrust}}=\frac{\vec F_{\text{thrust}}(t)}{m}=\vec u(t),
-$$
+## Model
 
-where $\vec F_{\text{thrust}}(t)$ is the applied thrust force and $\vec u(t)$ is the control acceleration. To quantify orbit maintenance, we will specify a consistent control rule (for example, applying a correction when orbital altitude or another chosen orbital element deviates beyond a tolerance).
-
-## The Two-Dimensional Numerical Model
-
-For a first implementation, we will use the planar state vector
+The state is $\vec u=(x,y,v_x,v_y)^T$ in an Earth-centered inertial frame, with
 
 $$
-\vec y(t)=\begin{bmatrix}x&y&v_x&v_y\end{bmatrix}^{T},
-\qquad
-\dot{\vec y}(t)=\begin{bmatrix}v_x&v_y&\ddot x&\ddot y\end{bmatrix}^{T}.
+\ddot{\vec r}=\vec a_g+\vec a_{\text{drag}}+\vec a_{J_2}+\vec a_{\text{Moon}}.
 $$
 
-Let $r=\sqrt{x^2+y^2}$, $\vec r_M=(x_M,y_M)^T$, and $d=\sqrt{(x_M-x)^2+(y_M-y)^2}$. In the planar equatorial approximation ($z=0$), the components become
+- **Central gravity:** $\vec a_g=-\mu_E\vec r/r^3$.
+- **Drag:** $\vec a_{\text{drag}}=-\frac{C_DA\rho(h)}{2m}|\vec v|\vec v$. It uses a stationary atmosphere and the exponential density $\rho=\rho_0e^{-(h-h_0)/H}$.
+- **$J_2$:** in the equatorial plane, $\vec a_{J_2}=-\frac{3J_2\mu_ER_E^2}{2r^5}\vec r$.
+- **Moon:** a third-body perturbation, $\vec a_{\text{Moon}}=\mu_M\left(\frac{\vec r_M-\vec r}{|\vec r_M-\vec r|^3}-\frac{\vec r_M}{D^3}\right)$. The Moon follows a prescribed circular orbit in the same plane as the satellite, $\vec r_M=D(\cos(\omega_Mt+\phi_0),\sin(\omega_Mt+\phi_0))$.
 
-$$
-\begin{aligned}
-\ddot x={}&-\frac{\mu_E x}{r^3}
--\frac{C_D A\rho(h)}{2m}|\vec v_{\text{rel}}|v_{\text{rel},x}
--\frac{3J_2\mu_E R_E^2}{2r^5}x\\
-&+\mu_M\left(\frac{x_M-x}{d^3}-\frac{x_M}{D^3}\right)+u_x(t),
-\end{aligned}
-$$
+| Parameter | Value | Parameter | Value |
+| --- | --- | --- | --- |
+| $\mu_E$ | $3.986004418\times10^{14}$ m³/s² | $R_E$ | $6378.137$ km |
+| $J_2$ | $1.08263\times10^{-3}$ | $\mu_M$ | $4.9028\times10^{12}$ m³/s² |
+| $D$ | $384{,}400$ km | $T_M$ | $27.32$ days |
+| $m$, $A$, $C_D$ | $100$ kg, $1$ m², $2.2$ | $\rho_0$, $h_0$, $H$ | $4\times10^{-12}$ kg/m³, $400$ km, $60$ km |
 
-$$
-\begin{aligned}
-\ddot y={}&-\frac{\mu_E y}{r^3}
--\frac{C_D A\rho(h)}{2m}|\vec v_{\text{rel}}|v_{\text{rel},y}
--\frac{3J_2\mu_E R_E^2}{2r^5}y\\
-&+\mu_M\left(\frac{y_M-y}{d^3}-\frac{y_M}{D^3}\right)+u_y(t).
-\end{aligned}
-$$
+All calculations use SI units. Each run starts with the central-gravity circular state at one of two altitudes: **300 km** (low orbit) and **35,786 km** (geostationary altitude). Runs last 7 days, with $\Delta t=5$ s at low altitude and $120$ s at high altitude.
 
-These coupled, nonlinear, time-dependent ODEs can be integrated numerically. A three-dimensional extension would instead use the six-component state $(x,y,z,v_x,v_y,v_z)$ and the full vector $J_2$ and lunar-acceleration formulas above.
+### Runs
 
-**Unit consistency:** The lunar parameters are listed in kilometers and seconds. Any simulation using SI units must convert them to meters and seconds, and all other quantities (including density, area, and mass) must be expressed in a compatible system.
+| Run | Terms included |
+| --- | --- |
+| central | central gravity |
+| drag | central gravity and drag |
+| j2 | central gravity and $J_2$ |
+| baseline | central gravity, drag, and $J_2$ |
+| moon | baseline plus the Moon |
+| baseline / moon controlled | the same runs with the maintenance rule below |
 
-## The Numerical Method
+**Maintenance rule.** Every 600 s the velocity is reset to the $J_2$-corrected circular speed, plus a radial term that returns the satellite to its initial radius within 3600 s. The cost is the sum of the velocity jumps, $\Delta v_{\text{total}}=\sum_j|\vec v^+-\vec v^-|$.
 
-We will solve the first-order ODE system using a numerical integration method such as fourth-order Runge–Kutta (RK4). We will compare time steps to evaluate numerical convergence and separate numerical integration error from physical trajectory changes. For a selected initial orbit, we will simulate the following cases:
+## Validation
 
-1. **Model A — Baseline:** Earth's central gravity, atmospheric drag, and $J_2$, without lunar gravity or corrective thrust.
-2. **Model B — Lunar perturbation:** All Model A terms plus lunar third-body gravity, without corrective thrust.
-3. **Model C — Orbit maintenance:** All Model B terms plus a defined corrective-thrust rule.
+- **Exact two-body solution:** the observed convergence orders are 2.03 for Heun and 4.10 for RK4. RK4 conserves energy and angular momentum to about $10^{-12}$.
+- **$J_2$ checks:**
+  - The $J_2$-only runs conserve the $J_2$ energy and the angular momentum to about $10^{-10}$.
+  - The radial drop matches the analytic value $3J_2R_E^2/r_0$: 19.785 km at low altitude and 3.134 km at high altitude.
+- **Drag check:** an analytic decay estimate predicts a 7-day altitude loss of 16.649 km; the simulation gives 16.643 km.
+- **Full model:** refining the step to $\Delta t/2$ and $\Delta t/4$ gives observed RK4 orders of 4.28 (low) and 4.21 (high).
 
-We will compare orbital altitude, trajectory displacement, and orbital elements such as eccentricity where appropriate. For Model C, we will also compare accumulated corrective $\Delta v$, calculated from the applied control acceleration as
+## Key results (7 days)
 
-$$
-\Delta v_{\text{total}}=\int_0^{t_f}|\vec u(t)|\,dt
-$$
+| Quantity | Low orbit (300 km) | High orbit (35,786 km) |
+| --- | --- | --- |
+| Altitude loss, drag only | 16.643 km | negligible |
+| Maximum radial drop, $J_2$ only | 19.785 km | 3.134 km |
+| Final altitude, baseline | 270.427 km | 35,785.988 km |
+| Maximum lunar position separation | 0.497 km | 55.457 km |
+| Maximum lunar altitude difference | 5.5 m | 3.660 km |
+| Maintenance $\Delta v$ without / with Moon | 20.837 / 20.739 m/s | 0.058 / 3.482 m/s |
+| Lunar change in $\Delta v$ over 8 lunar phases | −0.0987 to −0.0971 m/s | +3.396 to +3.465 m/s |
 
-for a continuous-thrust model (or the sum of the magnitudes of individual velocity corrections for impulsive maneuvers).
+- **Low orbit:** drag and $J_2$ dominate, and the Moon's effect is small.
+- **High orbit:** drag vanishes, and the Moon's radial effect is comparable to $J_2$.
+- **Heun at the same step sizes:** its errors (50–530 km) are larger than the lunar signal, so the choice of method matters.
+- **Maintenance costs:** these depend on the control rule. At high altitude, much of the extra cost comes from the rule cancelling the Moon's periodic radial oscillation.
 
-To isolate the effect of the Moon, we will compare Models A and B with identical initial conditions and numerical settings. We may repeat this comparison at multiple orbital altitudes: atmospheric drag is generally more important in low Earth orbit, while the relative importance of lunar gravitational perturbations increases for higher Earth orbits. Model C will show the orbit-maintenance cost under the chosen control rule.
+## Assumptions and limitations
 
-## The Assumptions
-
-- The initial simulation is two-dimensional and assumes an equatorial Earth orbit and a coplanar, circular lunar orbit.
-- The Moon's position is prescribed as a function of time; the Moon's orbit is not integrated as an additional dynamical body.
-- The effects of the Sun, solar radiation pressure, and other higher-order gravitational harmonics are neglected.
-- The atmospheric density follows an exponential approximation; real density varies with solar activity and other conditions.
-- A fixed reference orbit and control rule will be chosen before computing corrective thrust.
-- An optional extension is a three-dimensional orbit model with lunar inclination and more realistic Moon positions.
-
-This formulation extends the original project without changing its main emphasis on orbital dynamics, numerical integration, time-step sensitivity, and corrective thrust.
+- The model is planar and equatorial. The Moon's orbit is circular and coplanar, while the real one is inclined 18.3–28.6° to Earth's equator, so out-of-plane effects are not modeled.
+- The Moon's position is prescribed, not integrated.
+- The Sun, solar radiation pressure, higher gravity harmonics, atmospheric rotation, and mass loss are neglected.
+- One exponential density law is used at every altitude.
+- Only one maintenance rule is used, and its $\Delta v$ is not an optimal station-keeping cost.
