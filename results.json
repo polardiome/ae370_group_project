@@ -1,0 +1,233 @@
+{
+  "validation": {
+    "heun": [
+      {
+        "dt": 67.88971411434008,
+        "error_m": 1423035.637494478,
+        "evaluations": 480,
+        "runtime_s": 0.0009940830059349537,
+        "energy_relative": 0.004337422388736911,
+        "angular_relative": 0.0021756710244216215
+      },
+      {
+        "dt": 33.94485705717004,
+        "error_m": 310832.7570099521,
+        "evaluations": 960,
+        "runtime_s": 0.001852832967415452,
+        "energy_relative": 0.0005644113406071405,
+        "angular_relative": 0.0002823249649219761
+      },
+      {
+        "dt": 16.97242852858502,
+        "error_m": 71348.38132896321,
+        "evaluations": 1920,
+        "runtime_s": 0.0036984591279178858,
+        "energy_relative": 7.116219025327108e-05,
+        "angular_relative": 3.558299375727714e-05
+      },
+      {
+        "dt": 8.48621426429251,
+        "error_m": 17015.855736819656,
+        "evaluations": 3840,
+        "runtime_s": 0.007270124973729253,
+        "energy_relative": 8.91263641267237e-06,
+        "angular_relative": 4.456347993064824e-06
+      },
+      {
+        "dt": 4.243107132146255,
+        "error_m": 4152.912422733879,
+        "evaluations": 7680,
+        "runtime_s": 0.0144404589664191,
+        "energy_relative": 1.114593086271043e-06,
+        "angular_relative": 5.572970092071472e-07
+      }
+    ],
+    "rk4": [
+      {
+        "dt": 67.88971411434008,
+        "error_m": 257.366546288607,
+        "evaluations": 960,
+        "runtime_s": 0.002218833891674876,
+        "energy_relative": 1.5667401567220907e-06,
+        "angular_relative": 7.833691578751356e-07
+      },
+      {
+        "dt": 33.94485705717004,
+        "error_m": 11.474753876937227,
+        "evaluations": 1920,
+        "runtime_s": 0.004370708018541336,
+        "energy_relative": 4.891412452856514e-08,
+        "angular_relative": 2.445706137610415e-08
+      },
+      {
+        "dt": 16.97242852858502,
+        "error_m": 0.5730134097803423,
+        "evaluations": 3840,
+        "runtime_s": 0.008717333897948265,
+        "energy_relative": 1.5282126675231211e-09,
+        "angular_relative": 7.641062227392581e-10
+      },
+      {
+        "dt": 8.48621426429251,
+        "error_m": 0.03131149654276015,
+        "evaluations": 7680,
+        "runtime_s": 0.017560207983478904,
+        "energy_relative": 4.775246864596738e-11,
+        "angular_relative": 2.387623432298369e-11
+      },
+      {
+        "dt": 4.243107132146255,
+        "error_m": 0.0018218053677909144,
+        "evaluations": 15360,
+        "runtime_s": 0.034915042109787464,
+        "energy_relative": 1.4908074774666602e-12,
+        "angular_relative": 7.454037387333301e-13
+      }
+    ],
+    "period_s": 5431.177129147207
+  },
+  "experiments": {
+    "Low": {
+      "central": {
+        "final_altitude_km": 299.99999897083177,
+        "max_altitude_change_km": 1.0673943907022476e-06
+      },
+      "drag": {
+        "final_altitude_km": 283.35670251169336,
+        "max_altitude_change_km": 16.64329748830665
+      },
+      "j2": {
+        "final_altitude_km": 280.3099472462442,
+        "max_altitude_change_km": 19.78495050437376
+      },
+      "baseline": {
+        "final_altitude_km": 270.42689534089806,
+        "max_altitude_change_km": 38.54201754854154
+      },
+      "moon": {
+        "final_altitude_km": 270.4214112197477,
+        "max_altitude_change_km": 38.5416301753372
+      },
+      "baseline_controlled": {
+        "delta_v_m_s": 20.83655095108608,
+        "max_altitude_error_km": 2.290615727227181
+      },
+      "moon_controlled": {
+        "delta_v_m_s": 20.738947885480616,
+        "max_altitude_error_km": 2.290458967950195
+      },
+      "heun_lunar_comparison": [
+        {
+          "dt_s": 5.0,
+          "max_position_difference_m": 528538.6140727283
+        },
+        {
+          "dt_s": 2.5,
+          "max_position_difference_m": 98190.5200139681
+        }
+      ],
+      "lunar": {
+        "max_displacement_km": 0.49737423530520974,
+        "max_altitude_difference_km": 0.00548412115033716,
+        "paired_displacement_refinement_m": 0.00022199998236941887,
+        "additional_delta_v_m_s": -0.09760306560546184,
+        "fine_additional_delta_v_m_s": -0.09760191847528432
+      },
+      "convergence": {
+        "baseline": {
+          "max_position_difference_m": 1.3770703136391234,
+          "max_altitude_difference_m": 0.004051459953188896,
+          "delta_v_difference_m_s": 0.0
+        },
+        "moon": {
+          "max_position_difference_m": 1.3772679010946591,
+          "max_altitude_difference_m": 0.004051730036735535,
+          "delta_v_difference_m_s": 0.0
+        },
+        "baseline_controlled": {
+          "max_position_difference_m": 0.12755179345835316,
+          "max_altitude_difference_m": 0.00016786344349384308,
+          "delta_v_difference_m_s": 5.504007181045267e-05
+        },
+        "moon_controlled": {
+          "max_position_difference_m": 0.12754998905013643,
+          "max_altitude_difference_m": 0.0001678643748164177,
+          "delta_v_difference_m_s": 5.389294163293812e-05
+        }
+      },
+      "dt_s": 5.0,
+      "altitude_km": 300.0
+    },
+    "High": {
+      "central": {
+        "final_altitude_km": 35785.99999732694,
+        "max_altitude_change_km": 1.0181434452533722e-05
+      },
+      "drag": {
+        "final_altitude_km": 35785.99999732694,
+        "max_altitude_change_km": 1.0181434452533722e-05
+      },
+      "j2": {
+        "final_altitude_km": 35785.98833155444,
+        "max_altitude_change_km": 3.133626130498946
+      },
+      "baseline": {
+        "final_altitude_km": 35785.98833155444,
+        "max_altitude_change_km": 3.133626130498946
+      },
+      "moon": {
+        "final_altitude_km": 35785.72422174101,
+        "max_altitude_change_km": 6.466768515586853
+      },
+      "baseline_controlled": {
+        "delta_v_m_s": 0.057756618035421634,
+        "max_altitude_error_km": 0.001499437652528286
+      },
+      "moon_controlled": {
+        "delta_v_m_s": 3.4817596125089305,
+        "max_altitude_error_km": 0.008637580417096615
+      },
+      "heun_lunar_comparison": [
+        {
+          "dt_s": 120.0,
+          "max_position_difference_m": 209882.2745334221
+        },
+        {
+          "dt_s": 60.0,
+          "max_position_difference_m": 49907.80404582547
+        }
+      ],
+      "lunar": {
+        "max_displacement_km": 55.45732496304725,
+        "max_altitude_difference_km": 3.659948454044759,
+        "paired_displacement_refinement_m": 0.00043765103153261983,
+        "additional_delta_v_m_s": 3.424002994473509,
+        "fine_additional_delta_v_m_s": 3.4240153309016885
+      },
+      "convergence": {
+        "baseline": {
+          "max_position_difference_m": 0.3184438078756526,
+          "max_altitude_difference_m": 0.009624168276786804,
+          "delta_v_difference_m_s": 0.0
+        },
+        "moon": {
+          "max_position_difference_m": 0.3185186793389381,
+          "max_altitude_difference_m": 0.009618431329727173,
+          "delta_v_difference_m_s": 0.0
+        },
+        "baseline_controlled": {
+          "max_position_difference_m": 0.08365177721114544,
+          "max_altitude_difference_m": 2.467632293701172e-05,
+          "delta_v_difference_m_s": 1.0435877684449035e-05
+        },
+        "moon_controlled": {
+          "max_position_difference_m": 0.08365140774318852,
+          "max_altitude_difference_m": 2.469867467880249e-05,
+          "delta_v_difference_m_s": 1.9005504952041008e-06
+        }
+      },
+      "dt_s": 120.0,
+      "altitude_km": 35786.0
+    }
+  }
+}
