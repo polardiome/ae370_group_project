@@ -92,6 +92,8 @@ Approximating this integral with staged slopes gives the classical RK4 method:
 \end{align*}
 Each step evaluates these four slopes in order and then updates the state. The time-dependent Moon position is recomputed at each stage time. The integrator is written from scratch, with no outside ODE solver.
 
+We decided to use RK4 as our main numerical method because it is a good balance between accuracy, stability, and computational costs. RK4 is a fourth order method, and Heun is a second order method, so RK4 has less errors for the same time step. Although RK4 has four function evaluations per step compared with two for Heun, its better accuracy makes the additional costs worthwhile. RK4 has a more suitable stability region for oscillatory problems, and Heun can introduce numerical growth for imaginary eigenvalues. We need a method that can accurately capture differences over several days. Therefore, we used RK4 for our main simulations and Heun for comparison.
+
 For comparison, Heun uses $k_1=f(t_k,\vect u_k)$ and a forward Euler prediction $\vect u^*=\vect u_k+\dt k_1$, followed by
 \[
 \vect u_{k+1}=\vect u_k+\frac{\dt}{2}[k_1+f(t_k+\dt,\vect u^*)].
