@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  29 OCT 2026 22:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  29 OCT 2026 22:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -356,52 +356,50 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
 [2]
-
-[3]
-<figures/stability.pdf, id=66, 354.73726pt x 246.47638pt>
+<figures/stability.pdf, id=62, 354.73726pt x 246.47638pt>
 File: figures/stability.pdf Graphic file (type pdf)
 <use figures/stability.pdf>
-Package pdftex.def Info: figures/stability.pdf  used on input line 125.
+Package pdftex.def Info: figures/stability.pdf  used on input line 124.
 (pdftex.def)             Requested size: 270.29082pt x 187.80914pt.
 
 
-[4 <./figures/stability.pdf>]
-<figures/validation.pdf, id=116, 644.69232pt x 225.48616pt>
+[3 <./figures/stability.pdf>]
+<figures/validation.pdf, id=112, 644.69232pt x 225.48616pt>
 File: figures/validation.pdf Graphic file (type pdf)
 <use figures/validation.pdf>
-Package pdftex.def Info: figures/validation.pdf  used on input line 140.
+Package pdftex.def Info: figures/validation.pdf  used on input line 139.
 (pdftex.def)             Requested size: 491.43513pt x 171.8839pt.
 
 
-[5 <./figures/validation.pdf>]
-<figures/earth_effects.pdf, id=174, 643.81274pt x 427.47693pt>
+[4 <./figures/validation.pdf>]
+<figures/earth_effects.pdf, id=170, 643.81274pt x 427.47693pt>
 File: figures/earth_effects.pdf Graphic file (type pdf)
 <use figures/earth_effects.pdf>
-Package pdftex.def Info: figures/earth_effects.pdf  used on input line 178.
+Package pdftex.def Info: figures/earth_effects.pdf  used on input line 177.
 (pdftex.def)             Requested size: 452.11942pt x 300.21022pt.
 
 
-[6 <./figures/earth_effects.pdf>]
-<figures/lunar_effect.pdf, id=230, 643.72998pt x 427.48082pt>
+[5 <./figures/earth_effects.pdf>]
+<figures/lunar_effect.pdf, id=226, 643.72998pt x 427.48082pt>
 File: figures/lunar_effect.pdf Graphic file (type pdf)
 <use figures/lunar_effect.pdf>
-Package pdftex.def Info: figures/lunar_effect.pdf  used on input line 192.
+Package pdftex.def Info: figures/lunar_effect.pdf  used on input line 191.
 (pdftex.def)             Requested size: 402.98041pt x 267.60535pt.
 
 
-[7 <./figures/lunar_effect.pdf>]
-<figures/maintenance.pdf, id=285, 643.72998pt x 427.48082pt>
+[6 <./figures/lunar_effect.pdf>]
+<figures/maintenance.pdf, id=280, 643.72998pt x 427.48082pt>
 File: figures/maintenance.pdf Graphic file (type pdf)
 <use figures/maintenance.pdf>
-Package pdftex.def Info: figures/maintenance.pdf  used on input line 230.
+Package pdftex.def Info: figures/maintenance.pdf  used on input line 229.
 (pdftex.def)             Requested size: 442.28862pt x 293.70969pt.
 
 
-[8 <./figures/maintenance.pdf>]
+[7 <./figures/maintenance.pdf>]
 
-[9]
+[8]
 
-[10{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] (./report.aux)
+[9{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] (./report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -410,18 +408,18 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 40C084F6B7BD67BF35FC5B71C54F9278;1707.
  ) 
 Here is how much of TeX's memory you used:
- 10310 strings out of 473190
- 157052 string characters out of 5715801
- 570320 words of memory out of 5000000
+ 10309 strings out of 473190
+ 157045 string characters out of 5715801
+ 570318 words of memory out of 5000000
  33408 multiletter control sequences out of 15000+600000
  567974 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,12n,79p,677b,439s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on report.pdf (10 pages, 416769 bytes).
+Output written on report.pdf (9 pages, 416454 bytes).
 PDF statistics:
- 433 PDF objects out of 1000 (max. 8388607)
- 182 compressed objects within 2 object streams
- 33 named destinations out of 1000 (max. 500000)
+ 429 PDF objects out of 1000 (max. 8388607)
+ 179 compressed objects within 2 object streams
+ 32 named destinations out of 1000 (max. 500000)
  90 words of extra memory for PDF output out of 10000 (max. 10000000)
 
