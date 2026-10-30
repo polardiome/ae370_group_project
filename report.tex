@@ -30,10 +30,7 @@ We address the following questions with matched simulations at two altitudes:
 \item How much additional corrective thrust is required to maintain the desired orbit when the Moon's gravity is included?
 \end{enumerate}
 
-
-The goal of this project is to understand how atmospheric drag, Earth's gravitational field, and the Moon's gravity can change the satellite motion at different altitudes. In addition to that, we need to see how these impacts affect the correction needed in order to keep the orbit intact.
-
-In order to understand these problems, we consider the position and velocity of the satellite in an initial value problem (IVP). The entire system is nonlinear and time-dependent as the gravity force is dependent on the position, the atmosphere resistance force is dependent on the altitude and the velocity and the position of the moon is dependent on the time. Because of the lack of a closed form solution for the entire system, we use numerical solution to find the motion of the satellite.
+We treat the satellite's position and velocity as an initial value problem (IVP). The system is nonlinear and time dependent: gravity depends on position, atmospheric drag depends on altitude and velocity, and the Moon's position depends on time. Because the full system has no closed-form solution, we solve it numerically.
 
 Let $\vect r=(x,y)^T$, $\vect v=(v_x,v_y)^T$, $r=|\vect r|$, and $h=r-R_E$. In an Earth-centered inertial frame, the state is
 \begin{equation}
@@ -66,7 +63,9 @@ The prescribed lunar orbit and third-body acceleration are
 -\frac{\vect r_M}{D^3}\right].
 \label{eq:moon}
 \end{equation}
-The second lunar term subtracts the Moon's acceleration of Earth's center. Omitting it would give the wrong Earth-centered equations. The lunar orbit in Eq.~\eqref{eq:moon-orbit} is idealized: it is circular, it starts at phase $\phi_0=0$ (Section~\ref{sec:maintenance} also tests other phases), and it lies in the satellite's equatorial plane. The real lunar orbit has an eccentricity of about $0.055$ and is inclined about $5.1^\circ$ to the ecliptic, so its inclination to Earth's equator varies between about $18.3^\circ$ and $28.6^\circ$ over an 18.6-year cycle~\cite{moonfacts}. A coplanar Moon cannot exert out-of-plane forces on the satellite, so this assumption also removes any lunar change of the orbital plane. We also neglect the Sun, atmospheric rotation, and changes in satellite mass. Maneuvers are modeled as velocity jumps between ODE integration intervals, as described in Section~\ref{sec:maintenance}.
+The second lunar term subtracts the Moon's acceleration of Earth's center. Omitting it would give the wrong Earth-centered equations.
+
+The lunar orbit in Eq.~\eqref{eq:moon-orbit} is idealized: it is circular, it starts at phase $\phi_0=0$ (Section~\ref{sec:maintenance} also tests other phases), and it lies in the satellite's equatorial plane. The real lunar orbit has an eccentricity of about $0.055$ and is inclined about $5.1^\circ$ to the ecliptic, so its inclination to Earth's equator varies between about $18.3^\circ$ and $28.6^\circ$ over an 18.6-year cycle~\cite{moonfacts}. A coplanar Moon cannot exert out-of-plane forces on the satellite, so this assumption also removes any lunar change of the orbital plane. We also neglect the Sun, atmospheric rotation, and changes in satellite mass. Maneuvers are modeled as velocity jumps between ODE integration intervals, as described in Section~\ref{sec:maintenance}.
 
 \section{Parameters and numerical method}\label{sec:method}
 All calculations use meters, seconds, and kilograms. Table~\ref{tab:params} lists fixed model inputs, not fitted measurements. The Earth constants $\mu_E$ and $R_E$ are the WGS~84 values~\cite{wgs84}, $J_2$ is the standard value in~\cite{vallado}, $\mu_M$ is the JPL DE430 value~\cite{de430}, and $D$ and $T_M$ are mean values from~\cite{moonfacts}. The density law is a simplified assumption rather than a detailed atmosphere model: $\rho_0$ and $H$ are rounded values of the same order as tabulated exponential-atmosphere values near $400$~km~\cite{vallado}. The satellite mass, area, and drag coefficient are chosen representative values.
@@ -88,10 +87,11 @@ $\rho_0$ & $4\times10^{-12}$ kg/m$^3$ & $h_0$, $H$ & $400$ km, $60$ km\\
 \end{table}
 We use initial altitudes of $300$ km (low) and $35{,}786$ km (high). Each uncontrolled comparison starts with $\vect u_0=(r_0,0,0,\sqrt{\mu_E/r_0})^T$, where $r_0=R_E+h_{\rm initial}$. This is circular for central gravity alone. It is deliberately the same initial state in every physical model, so it need not be circular after $J_2$ is added.
 
-From Lecture 10~\cite{lec10}, integrate the ODE across a step:
-\[
+Following Lecture 10~\cite{lec10}, we integrate Eq.~\eqref{eq:ode} across a step:
+\begin{equation}
 \vect u(t_{k+1})-\vect u(t_k)=\int_{t_k}^{t_{k+1}} f(t,\vect u(t))\,dt.
-\]
+\label{eq:integral}
+\end{equation}
 Approximating this integral with staged slopes gives the classical RK4 method:
 \begin{align}
  k_1&=f(t_k,\vect u_k),&
@@ -102,9 +102,7 @@ Approximating this integral with staged slopes gives the classical RK4 method:
 \end{align}
 Each step evaluates these four slopes in order and then updates the state. The time-dependent Moon position is recomputed at each stage time. The integrator is written from scratch, with no outside ODE solver.
 
-We decided to use RK4 as our main numerical method because it is a good balance between accuracy, stability, and computational costs. RK4 is a fourth order method, and Heun is a second order method, so RK4 has less errors for the same time step. Although RK4 has four function evaluations per step compared with two for Heun, its better accuracy makes the additional costs worthwhile. RK4 has a more suitable stability region for oscillatory problems, and Heun can introduce numerical growth for imaginary eigenvalues. We need a method that can accurately capture differences over several days. Therefore, we used RK4 for our main simulations and Heun for comparison.
-
-For comparison, Heun uses $k_1=f(t_k,\vect u_k)$ and a forward Euler prediction $\vect u^*=\vect u_k+\dt k_1$, followed by
+For comparison, Heun's method uses $k_1=f(t_k,\vect u_k)$ and a forward Euler prediction $\vect u^*=\vect u_k+\dt k_1$, followed by
 \begin{equation}
 \vect u_{k+1}=\vect u_k+\frac{\dt}{2}[k_1+f(t_k+\dt,\vect u^*)].
 \label{eq:heun}
@@ -113,16 +111,19 @@ It costs two evaluations per step, compared with four for RK4. Taylor expansion 
 $f(t+\dt,u+\dt f)=f+\dt(f_t+f_u f)+O(\dt^2)$.
 Thus Heun matches $u(t+\dt)=u+\dt f+\dt^2(f_t+f_u f)/2+O(\dt^3)$: its one-step error is $O(\dt^3)$ and global order is two for a smooth problem over a fixed interval. RK4 has one-step error $O(\dt^5)$ and global order four, as covered in Lecture 10~\cite{lec10}.
 
-Following Lecture 11~\cite{lec11}, truncation error is the residual after substituting the exact solution, divided by $\dt$. For RK4 this is $O(\dt^4)$, rather than the undivided $O(\dt^5)$ step error. The numerical checks below test the expected global orders on the nonlinear orbital equations.
+Following Lecture 11~\cite{lec11}, truncation error is the residual after substituting the exact solution, divided by $\dt$. For RK4 this is $O(\dt^4)$, rather than the undivided $O(\dt^5)$ step error.
+
+We use RK4, Eq.~\eqref{eq:rk4}, as our main method because it balances accuracy, stability, and computational cost. As a fourth-order method it has much smaller errors than the second-order Heun method, Eq.~\eqref{eq:heun}, at the same time step. It needs four function evaluations per step instead of two, but its accuracy makes the extra cost worthwhile. RK4 also has a more suitable stability region for oscillatory problems, whereas Heun can amplify modes with imaginary eigenvalues (Section~\ref{sec:stability}). Because we need to resolve small differences that accumulate over several days, we use RK4 for all main simulations and Heun only for comparison. The numerical checks below test the expected global orders on the nonlinear orbital equations.
 
 \newpage
 \section{Stability and independent validation}\label{sec:stability}
-For the lecture test equation $\dot u=\lambda u$, let $w=\dt\lambda$. Substitution into RK4 gives successive slopes proportional to
-\[
+For the lecture test equation $\dot u=\lambda u$, let $w=\dt\lambda$. Substitution into Eq.~\eqref{eq:rk4} gives successive slopes proportional to
+\begin{equation}
 \lambda u_k,\quad \lambda u_k(1+w/2),\quad
 \lambda u_k(1+w/2+w^2/4),\quad
 \lambda u_k(1+w+w^2/2+w^3/4).
-\]
+\label{eq:slopes}
+\end{equation}
 Collecting terms gives $u_{k+1}=R(w)u_k$, where
 \begin{equation}
 R_{\rm RK4}(w)=1+w+\frac{w^2}{2}+\frac{w^3}{6}+\frac{w^4}{24},
@@ -204,7 +205,7 @@ $\dt$ (s) & Heun error (m) & RK4 error (m)\\
 \bottomrule
 \end{tabular}
 \end{table}
-Using $p=\log_2(E(\dt)/E(\dt/2))$ on the last pair gives $p=2.03$ for Heun and $p=4.10$ for RK4. The rates approach the expected two and four. At equal cost of $7680$ evaluations, Heun's error is $4153$ m while RK4's is $0.0313$ m. The measured runtimes of these two short runs were about $0.015$ s and $0.017$ s; such short timings are machine dependent. Evaluation counts are the clearer comparison.
+Figure~\ref{fig:validation} and Table~\ref{tab:validation} show the errors. Using $p=\log_2(E(\dt)/E(\dt/2))$ on the last pair gives $p=2.03$ for Heun and $p=4.10$ for RK4. The rates approach the expected two and four. At equal cost of $7680$ evaluations, Heun's error is $4153$ m while RK4's is $0.0313$ m. The measured runtimes of these two short runs were about $0.015$ s and $0.017$ s; such short timings are machine dependent. Evaluation counts are the clearer comparison.
 
 For seven-day results we select $\dt=5$ s at low altitude and $120$ s at high altitude, which is $120{,}960$ and $5{,}040$ steps. On our machine one full-model run takes about $2.4$ s at low altitude and $0.1$ s at high altitude, and the complete script, including every refinement run and the phase sweep of Section~\ref{sec:maintenance}, runs in about one minute. The full model and the baseline are each repeated at half that step. Table~\ref{tab:refinement} gives the maximum coarse--fine differences at common times.
 \begin{table}[H]
@@ -221,7 +222,9 @@ High & 0.3185 & 0.009618 & 0.000438\\
 \bottomrule
 \end{tabular}
 \end{table}
-The last column compares $(\vect r_{\rm lunar}-\vect r_{\rm base})$ between the two step sizes, where the subscripts denote the full lunar run and the baseline run. It checks the actual difference we interpret as the Moon's effect. These are numerical differences, not rigorous error bounds. Both the individual-run and paired differences are much smaller than the lunar signals reported next. To measure an order on the full equations rather than only on the two-body problem, we also ran the full lunar model at $\dt/4$ ($1.25$ s and $30$ s). The maximum position difference falls from $1.3773$ m ($\dt$ against $\dt/2$) to $0.07084$ m ($\dt/2$ against $\dt/4$) at low altitude, and from $0.3185$ m to $0.01725$ m at high altitude. These give observed orders of $p=4.28$ and $4.21$, consistent with fourth-order convergence on the equations we actually report.
+The last column compares $(\vect r_{\rm lunar}-\vect r_{\rm base})$ between the two step sizes, where the subscripts denote the full lunar run and the baseline run. It checks the actual difference we interpret as the Moon's effect. These are numerical differences, not rigorous error bounds. Both the individual-run and paired differences are much smaller than the lunar signals reported next.
+
+To measure an order on the full equations rather than only on the two-body problem, we also ran the full lunar model at $\dt/4$ ($1.25$ s and $30$ s). The maximum position difference falls from $1.3773$ m ($\dt$ against $\dt/2$) to $0.07084$ m ($\dt/2$ against $\dt/4$) at low altitude, and from $0.3185$ m to $0.01725$ m at high altitude. These give observed orders of $p=4.28$ and $4.21$, consistent with fourth-order convergence on the equations we actually report.
 
 For scale, $n\dt$ is about $0.0058$ in the low orbit and $0.0087$ in the high orbit. This is the relevant size of $w$ because the solution oscillates at the orbital frequency $n$: small perturbations of a circular orbit, written in a frame rotating with the orbit, obey the Clohessy--Wiltshire equations, whose in-plane eigenvalues are $0$ (twice) and $\pm in$~\cite{curtis}. Drag and the Moon change these only slightly, so $w\approx\pm in\dt$ lies near the imaginary axis. These values are small relative to the imaginary-axis limit $\sqrt8$, but the refinement check is still necessary.
 
@@ -237,7 +240,7 @@ We compare central gravity alone, central gravity with drag, central gravity wit
 
 With drag alone, the low orbit loses $16.643$ km of altitude by day seven, in agreement with the estimate of Eq.~\eqref{eq:decay} (Figure~\ref{fig:earth}). Drag opposes velocity: $\vect v\cdot\vect a_d=-C_D A\rho|\vect v|^3/(2m)\le0$, so it removes orbital energy. The high-orbit density is effectively zero in this exponential model and its drag-only run agrees with central gravity to numerical precision. Extending one density law over this full altitude range is a modeling simplification.
 
-Adding $J_2$ alone gives bounded radial oscillations, reaching $19.785$ km below the initial low altitude and $3.134$ km below the initial high altitude. The initial central-gravity circular speed is too small for a circular orbit in the stronger equatorial gravity field. The size of the excursion matches Eq.~\eqref{eq:j2drop}. These oscillations therefore do not mean that $J_2$ dissipates energy. The central-gravity energy formula is not the full conserved energy after adding $J_2$; the conserved quantity is $\epsilon_{J_2}$ of Eq.~\eqref{eq:j2energy}, which the $J_2$-only runs conserve to about $10^{-10}$. The altered orbital phase also produces large position separations. Our planar model does not describe changes in the orbital plane.
+Adding $J_2$ alone gives bounded radial oscillations, reaching $19.785$ km below the initial low altitude and $3.134$ km below the initial high altitude. The initial central-gravity circular speed is too small for a circular orbit in the stronger equatorial gravity field, and the size of the resulting excursion matches Eq.~\eqref{eq:j2drop}. These oscillations therefore do not mean that $J_2$ dissipates energy. The central-gravity energy formula is not the full conserved energy after adding $J_2$; the conserved quantity is $\epsilon_{J_2}$ of Eq.~\eqref{eq:j2energy}, which the $J_2$-only runs conserve to about $10^{-10}$. The altered orbital phase also produces large position separations. Our planar model does not describe changes in the orbital plane.
 
 With drag and $J_2$ together, the low altitude reaches a maximum departure of $38.542$ km from its initial value, ending at $270.427$ km. The combined behavior is not a simple sum: lower altitude increases the assumed density and hence the drag. At high altitude the baseline coincides with the $J_2$-only result.
 
@@ -263,7 +266,7 @@ Absolute lunar altitude difference (km) & 0.005484 & 3.65995\\
 \bottomrule
 \end{tabular}
 \end{table}
-The Moon changes the low-orbit altitude by at most about $5.5$ m relative to the baseline, much less than the drag and $J_2$ effects. Its position difference reaches about $497$ m because small changes in motion can accumulate into phase differences. At high altitude the lunar altitude change is comparable to the $J_2$-only radial excursion, while atmospheric drag is negligible in this model. The lunar position separation reaches about $55.5$ km.
+Figure~\ref{fig:lunar} and Table~\ref{tab:lunar} show the lunar effect. The Moon changes the low-orbit altitude by at most about $5.5$ m relative to the baseline, much less than the drag and $J_2$ effects. Its position difference reaches about $497$ m because small changes in motion can accumulate into phase differences. At high altitude the lunar altitude change is comparable to the $J_2$-only radial excursion, while atmospheric drag is negligible in this model. The lunar position separation reaches about $55.5$ km.
 
 This comparison uses the differential lunar acceleration, not the Moon's direct pull on the satellite alone. Both Earth and satellite respond to the Moon, and that common acceleration is removed. Over larger Earth-centered distances their lunar accelerations differ more strongly. This is consistent with the greater lunar effect in our high orbit.
 
@@ -286,7 +289,7 @@ The circular speed follows by setting $v_c^2/r$ equal to the magnitude of centra
 \Delta v_{\rm total}=\sum_j\Delta v_j.
 \label{eq:dv}
 \end{equation}
-We use the same rule in the baseline and lunar runs. There are $1008$ corrections over seven days, including the correction at the final time. The rule maintains altitude, not a specified longitude or orbital phase. We use a $3$ km altitude band as a simple success criterion, checking the sampled trajectory between maneuvers as well as at them.
+We use the same rule in the baseline and lunar runs. There are $1008$ corrections over seven days, including the correction at the final time. The rule maintains altitude, not a specified longitude or orbital phase. We use a $3$ km altitude band as a simple success criterion, checking the sampled trajectory between maneuvers as well as at them. Figure~\ref{fig:maintenance} and Table~\ref{tab:maintenance} show the results.
 \begin{figure}[H]
 \centering
 \includegraphics[width=.90\textwidth]{figures/maintenance.pdf}
@@ -333,7 +336,7 @@ The answers below follow the numbering in the premise.
 \begin{enumerate}
 \item \textbf{Atmospheric drag.} Drag removes orbital energy and lowers the low orbit. With drag alone, its altitude falls by $16.643$ km in seven days, matching the analytic decay estimate of $16.649$ km (Section~\ref{sec:stability}). Drag is negligible at the high altitude under the assumed density law (Section~\ref{sec:results}, Figure~\ref{fig:earth}).
 
-\item \textbf{Earth's gravity and $J_2$.} Central gravity alone maintains the initial circular orbit. Adding $J_2$ strengthens equatorial gravity, changes the orbital phase, and produces radial oscillations because the same initial speed is no longer circular. Maximum altitude departures with $J_2$ alone are $19.785$ km in the low orbit and $3.134$ km in the high orbit, matching the analytic excursion $3J_2R_E^2/r_0$. This is not drag-like energy loss: the $J_2$ energy $\epsilon_{J_2}$ and angular momentum are conserved to about $10^{-10}$ (Sections~\ref{sec:stability} and~\ref{sec:results}, Figure~\ref{fig:earth}).
+\item \textbf{Earth's gravity and $J_2$.} Central gravity alone maintains the initial circular orbit. Adding $J_2$ strengthens equatorial gravity, changes the orbital phase, and produces radial oscillations because the same initial speed is no longer circular. Maximum altitude departures with $J_2$ alone are $19.785$ km in the low orbit and $3.134$ km in the high orbit, matching the analytic excursion $3J_2R_E^2/r_0$ of Eq.~\eqref{eq:j2drop}. This is not drag-like energy loss: the $J_2$ energy $\epsilon_{J_2}$ and angular momentum are conserved to about $10^{-10}$ (Sections~\ref{sec:stability} and~\ref{sec:results}, Figure~\ref{fig:earth}).
 
 \item \textbf{Lunar gravity.} Relative to the baseline, the Moon produces maximum position separations of $0.4974$ km and $55.457$ km in the low and high orbits. Maximum altitude differences are $5.484$ m and $3.65995$ km. Thus the lunar radial effect is much smaller than drag and $J_2$ at low altitude, but comparable to the $J_2$ radial excursion at high altitude, where drag is negligible (Section~\ref{sec:results}, Figure~\ref{fig:lunar}).
 
