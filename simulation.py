@@ -18,10 +18,11 @@ RHO, HREF, SCALE = 4e-12, 400e3, 60e3
 DURATION = 7 * 86400.0
 CHECK = 600.0
 RETURN_TIME = 3600.0
+PHASES = np.arange(8)*np.pi/4
 FIG = Path(__file__).resolve().parent / "figures"
 
 
-def rhs(t, state, drag=False, j2=False, moon=False):
+def rhs(t, state, drag=False, j2=False, moon=False, phase=0.0):
     x, y, vx, vy = state
     r2 = x*x + y*y
     r = np.sqrt(r2)
@@ -35,7 +36,7 @@ def rhs(t, state, drag=False, j2=False, moon=False):
         ax += b*vx
         ay += b*vy
     if moon:
-        mx, my = DIST*np.cos(WM*t), DIST*np.sin(WM*t)
+        mx, my = DIST*np.cos(WM*t+phase), DIST*np.sin(WM*t+phase)
         dx, dy = mx-x, my-y
         d3 = (dx*dx + dy*dy)**1.5
         ax += MM*(dx/d3 - mx/DIST**3)
@@ -94,6 +95,51 @@ def radius(u):
     return np.linalg.norm(u[:, :2], axis=1)
 
 
+def j2_energy(u):
+    r = radius(u)
+    return np.sum(u[:, 2:]**2, axis=1)/2 - MU/r - MU*J2*RE**2/(2*r**3)
+
+
+def angular_momentum(u):
+    return u[:, 0]*u[:, 3]-u[:, 1]*u[:, 2]
+
+
+def j2_turning_radius(r0):
+    # Inner turning point of the equatorial J2 effective potential for v0 = sqrt(MU/r0).
+    def V(r):
+        return MU*r0/(2*r*r) - MU/r - MU*J2*RE**2/(2*r**3)
+    lo, hi = r0*(1-0.02), r0*(1-1e-7)
+    for _ in range(200):
+        mid = (lo+hi)/2
+        if V(mid) > V(r0):
+            lo = mid
+        else:
+            hi = mid
+    return (lo+hi)/2
+
+
+def independent_checks(alt, runs):
+    r0 = RE + alt
+    k = 1.5*J2*(RE/r0)**2
+    u = runs['j2'][1]
+    energy, angular = j2_energy(u), angular_momentum(u)
+    checks = dict(
+        j2_energy_relative=float(np.max(abs(energy/energy[0]-1))),
+        j2_angular_relative=float(np.max(abs(angular/angular[0]-1))),
+        j2_drop_linear_km=2*r0*k/1000,
+        j2_drop_exact_km=(r0-j2_turning_radius(r0))/1000,
+        j2_drop_simulated_km=float(r0-np.min(radius(u)))/1000)
+    # Circular-orbit decay da/dt = -rho*sqrt(MU*a)*CD*A/m, with density following the altitude.
+    c = RHO*np.sqrt(MU*r0)*CD*AREA/MASS
+    checks['drag_rate_km_day'] = c*np.exp(-(alt-HREF)/SCALE)*86400/1000
+    checks['drag_loss_constant_density_km'] = checks['drag_rate_km_day']*DURATION/86400
+    inner = np.exp((alt-HREF)/SCALE) - c*DURATION/SCALE
+    if inner > 0:
+        checks['drag_loss_varying_density_km'] = (alt-HREF-SCALE*np.log(inner))/1000
+    checks['drag_loss_simulated_km'] = float(r0-radius(runs['drag'][1])[-1])/1000
+    return checks
+
+
 def savefig(name):
     plt.savefig(FIG / (name + ".pdf"), bbox_inches="tight")
     plt.close()
@@ -149,10 +195,13 @@ def experiments():
         runs, data = {}, {}
         for name, flags in cases.items():
             f = lambda t, u, flags=flags: rhs(t, u, **flags)
+            start = perf_counter()
             t, u, dv = integrate(f, u0, DURATION, dt)
+            runtime = perf_counter()-start
             runs[name] = (t, u, dv)
             data[name] = dict(final_altitude_km=(radius(u)[-1]-RE)/1000,
-                              max_altitude_change_km=float(np.max(abs(radius(u)-u0[0]))/1000))
+                              max_altitude_change_km=float(np.max(abs(radius(u)-u0[0]))/1000),
+                              steps=len(t)-1, runtime_s=runtime)
         for name in ['baseline', 'moon']:
             flags = cases[name]
             f = lambda t, u, flags=flags: rhs(t, u, **flags)
@@ -192,7 +241,24 @@ def experiments():
             paired_displacement_refinement_m=float(np.max(np.linalg.norm((um[:, :2]-ub[:, :2])-(fm[:, :2]-fb[:, :2]), axis=1))),
             additional_delta_v_m_s=float(runs['moon_controlled'][2][-1]-runs['baseline_controlled'][2][-1]),
             fine_additional_delta_v_m_s=float(fine['moon_controlled'][2][-1]-fine['baseline_controlled'][2][-1]))
+        # Observed order on the full lunar model from dt, dt/2 and dt/4.
+        _, uq, _ = integrate(lambda t, u: rhs(t, u, drag=True, j2=True, moon=True), u0, DURATION, dt/4)
+        e1 = np.max(np.linalg.norm(um[:, :2]-fine['moon'][1][::2, :2], axis=1))
+        e2 = np.max(np.linalg.norm(fine['moon'][1][:, :2]-uq[::2, :2], axis=1))
+        convergence['moon_order'] = dict(dt_s=[dt, dt/2, dt/4],
+            difference_dt_dt2_m=float(e1), difference_dt2_dt4_m=float(e2),
+            observed_order=float(np.log2(e1/e2)))
         data['convergence'] = convergence
+        # Lunar maintenance cost for several initial lunar phases.
+        sweep = []
+        for phase in PHASES:
+            f = lambda t, u, phase=phase: rhs(t, u, drag=True, j2=True, moon=True, phase=phase)
+            _, u, dv = integrate(f, u0, DURATION, dt, controlled=True)
+            sweep.append(dict(phase_deg=float(np.degrees(phase)), delta_v_m_s=dv[-1],
+                              additional_delta_v_m_s=float(dv[-1]-runs['baseline_controlled'][2][-1]),
+                              max_altitude_error_km=float(np.max(abs(radius(u)-u0[0]))/1000)))
+        data['phase_sweep'] = sweep
+        data['checks'] = independent_checks(alt, runs)
         data['dt_s'] = dt
         data['altitude_km'] = alt/1000
         results[label] = data

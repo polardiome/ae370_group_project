@@ -5,7 +5,7 @@
         "dt": 67.88971411434008,
         "error_m": 1423035.637494478,
         "evaluations": 480,
-        "runtime_s": 0.0009940830059349537,
+        "runtime_s": 0.0011903329868800938,
         "energy_relative": 0.004337422388736911,
         "angular_relative": 0.0021756710244216215
       },
@@ -13,7 +13,7 @@
         "dt": 33.94485705717004,
         "error_m": 310832.7570099521,
         "evaluations": 960,
-        "runtime_s": 0.001852832967415452,
+        "runtime_s": 0.002219374990090728,
         "energy_relative": 0.0005644113406071405,
         "angular_relative": 0.0002823249649219761
       },
@@ -21,7 +21,7 @@
         "dt": 16.97242852858502,
         "error_m": 71348.38132896321,
         "evaluations": 1920,
-        "runtime_s": 0.0036984591279178858,
+        "runtime_s": 0.0044217079994268715,
         "energy_relative": 7.116219025327108e-05,
         "angular_relative": 3.558299375727714e-05
       },
@@ -29,7 +29,7 @@
         "dt": 8.48621426429251,
         "error_m": 17015.855736819656,
         "evaluations": 3840,
-        "runtime_s": 0.007270124973729253,
+        "runtime_s": 0.008791583008132875,
         "energy_relative": 8.91263641267237e-06,
         "angular_relative": 4.456347993064824e-06
       },
@@ -37,7 +37,7 @@
         "dt": 4.243107132146255,
         "error_m": 4152.912422733879,
         "evaluations": 7680,
-        "runtime_s": 0.0144404589664191,
+        "runtime_s": 0.01764762500533834,
         "energy_relative": 1.114593086271043e-06,
         "angular_relative": 5.572970092071472e-07
       }
@@ -47,7 +47,7 @@
         "dt": 67.88971411434008,
         "error_m": 257.366546288607,
         "evaluations": 960,
-        "runtime_s": 0.002218833891674876,
+        "runtime_s": 0.0027042499859817326,
         "energy_relative": 1.5667401567220907e-06,
         "angular_relative": 7.833691578751356e-07
       },
@@ -55,7 +55,7 @@
         "dt": 33.94485705717004,
         "error_m": 11.474753876937227,
         "evaluations": 1920,
-        "runtime_s": 0.004370708018541336,
+        "runtime_s": 0.005418541957624257,
         "energy_relative": 4.891412452856514e-08,
         "angular_relative": 2.445706137610415e-08
       },
@@ -63,7 +63,7 @@
         "dt": 16.97242852858502,
         "error_m": 0.5730134097803423,
         "evaluations": 3840,
-        "runtime_s": 0.008717333897948265,
+        "runtime_s": 0.010971584008075297,
         "energy_relative": 1.5282126675231211e-09,
         "angular_relative": 7.641062227392581e-10
       },
@@ -71,7 +71,7 @@
         "dt": 8.48621426429251,
         "error_m": 0.03131149654276015,
         "evaluations": 7680,
-        "runtime_s": 0.017560207983478904,
+        "runtime_s": 0.021698334021493793,
         "energy_relative": 4.775246864596738e-11,
         "angular_relative": 2.387623432298369e-11
       },
@@ -79,7 +79,7 @@
         "dt": 4.243107132146255,
         "error_m": 0.0018218053677909144,
         "evaluations": 15360,
-        "runtime_s": 0.034915042109787464,
+        "runtime_s": 0.04288833402097225,
         "energy_relative": 1.4908074774666602e-12,
         "angular_relative": 7.454037387333301e-13
       }
@@ -90,23 +90,33 @@
     "Low": {
       "central": {
         "final_altitude_km": 299.99999897083177,
-        "max_altitude_change_km": 1.0673943907022476e-06
+        "max_altitude_change_km": 1.0673943907022476e-06,
+        "steps": 120960,
+        "runtime_s": 1.3515785420313478
       },
       "drag": {
         "final_altitude_km": 283.35670251169336,
-        "max_altitude_change_km": 16.64329748830665
+        "max_altitude_change_km": 16.64329748830665,
+        "steps": 120960,
+        "runtime_s": 1.8558880000491627
       },
       "j2": {
         "final_altitude_km": 280.3099472462442,
-        "max_altitude_change_km": 19.78495050437376
+        "max_altitude_change_km": 19.78495050437376,
+        "steps": 120960,
+        "runtime_s": 1.4231750830076635
       },
       "baseline": {
         "final_altitude_km": 270.42689534089806,
-        "max_altitude_change_km": 38.54201754854154
+        "max_altitude_change_km": 38.54201754854154,
+        "steps": 120960,
+        "runtime_s": 1.9368293749867007
       },
       "moon": {
         "final_altitude_km": 270.4214112197477,
-        "max_altitude_change_km": 38.5416301753372
+        "max_altitude_change_km": 38.5416301753372,
+        "steps": 120960,
+        "runtime_s": 2.436102290987037
       },
       "baseline_controlled": {
         "delta_v_m_s": 20.83655095108608,
@@ -153,7 +163,78 @@
           "max_position_difference_m": 0.12754998905013643,
           "max_altitude_difference_m": 0.0001678643748164177,
           "delta_v_difference_m_s": 5.389294163293812e-05
+        },
+        "moon_order": {
+          "dt_s": [
+            5.0,
+            2.5,
+            1.25
+          ],
+          "difference_dt_dt2_m": 1.3772679010946591,
+          "difference_dt2_dt4_m": 0.07083526570492622,
+          "observed_order": 4.281197611906443
         }
+      },
+      "phase_sweep": [
+        {
+          "phase_deg": 0.0,
+          "delta_v_m_s": 20.738947885480616,
+          "additional_delta_v_m_s": -0.09760306560546184,
+          "max_altitude_error_km": 2.290458967950195
+        },
+        {
+          "phase_deg": 45.0,
+          "delta_v_m_s": 20.73784155615196,
+          "additional_delta_v_m_s": -0.09870939493411868,
+          "max_altitude_error_km": 2.290435521176085
+        },
+        {
+          "phase_deg": 90.0,
+          "delta_v_m_s": 20.738393879068347,
+          "additional_delta_v_m_s": -0.09815707201773094,
+          "max_altitude_error_km": 2.290671726576053
+        },
+        {
+          "phase_deg": 135.0,
+          "delta_v_m_s": 20.739484385663662,
+          "additional_delta_v_m_s": -0.09706656542241632,
+          "max_altitude_error_km": 2.290690878348425
+        },
+        {
+          "phase_deg": 180.0,
+          "delta_v_m_s": 20.738941563612197,
+          "additional_delta_v_m_s": -0.09760938747388082,
+          "max_altitude_error_km": 2.290465641199611
+        },
+        {
+          "phase_deg": 225.0,
+          "delta_v_m_s": 20.73788365401001,
+          "additional_delta_v_m_s": -0.09866729707606936,
+          "max_altitude_error_km": 2.2904413225874305
+        },
+        {
+          "phase_deg": 270.0,
+          "delta_v_m_s": 20.73838701041535,
+          "additional_delta_v_m_s": -0.09816394067072665,
+          "max_altitude_error_km": 2.290667096465826
+        },
+        {
+          "phase_deg": 315.0,
+          "delta_v_m_s": 20.73948551021174,
+          "additional_delta_v_m_s": -0.09706544087433855,
+          "max_altitude_error_km": 2.2906958353715017
+        }
+      ],
+      "checks": {
+        "j2_energy_relative": 1.2826006923205568e-10,
+        "j2_angular_relative": 6.405409536114348e-11,
+        "j2_drop_linear_km": 19.784891585384177,
+        "j2_drop_exact_km": 19.784949643189087,
+        "j2_drop_simulated_km": 19.78495050437376,
+        "drag_rate_km_day": 2.0769072440674927,
+        "drag_loss_constant_density_km": 14.53835070847245,
+        "drag_loss_varying_density_km": 16.648527863748605,
+        "drag_loss_simulated_km": 16.64329748830665
       },
       "dt_s": 5.0,
       "altitude_km": 300.0
@@ -161,23 +242,33 @@
     "High": {
       "central": {
         "final_altitude_km": 35785.99999732694,
-        "max_altitude_change_km": 1.0181434452533722e-05
+        "max_altitude_change_km": 1.0181434452533722e-05,
+        "steps": 5040,
+        "runtime_s": 0.05559808301040903
       },
       "drag": {
         "final_altitude_km": 35785.99999732694,
-        "max_altitude_change_km": 1.0181434452533722e-05
+        "max_altitude_change_km": 1.0181434452533722e-05,
+        "steps": 5040,
+        "runtime_s": 0.07697520800866187
       },
       "j2": {
         "final_altitude_km": 35785.98833155444,
-        "max_altitude_change_km": 3.133626130498946
+        "max_altitude_change_km": 3.133626130498946,
+        "steps": 5040,
+        "runtime_s": 0.05956170801073313
       },
       "baseline": {
         "final_altitude_km": 35785.98833155444,
-        "max_altitude_change_km": 3.133626130498946
+        "max_altitude_change_km": 3.133626130498946,
+        "steps": 5040,
+        "runtime_s": 0.08044816699111834
       },
       "moon": {
         "final_altitude_km": 35785.72422174101,
-        "max_altitude_change_km": 6.466768515586853
+        "max_altitude_change_km": 6.466768515586853,
+        "steps": 5040,
+        "runtime_s": 0.10077399999136105
       },
       "baseline_controlled": {
         "delta_v_m_s": 0.057756618035421634,
@@ -224,7 +315,78 @@
           "max_position_difference_m": 0.08365140774318852,
           "max_altitude_difference_m": 2.469867467880249e-05,
           "delta_v_difference_m_s": 1.9005504952041008e-06
+        },
+        "moon_order": {
+          "dt_s": [
+            120.0,
+            60.0,
+            30.0
+          ],
+          "difference_dt_dt2_m": 0.3185186793389381,
+          "difference_dt2_dt4_m": 0.017246864118409984,
+          "observed_order": 4.206972005668937
         }
+      },
+      "phase_sweep": [
+        {
+          "phase_deg": 0.0,
+          "delta_v_m_s": 3.4817596125089305,
+          "additional_delta_v_m_s": 3.424002994473509,
+          "max_altitude_error_km": 0.008637580417096615
+        },
+        {
+          "phase_deg": 45.0,
+          "delta_v_m_s": 3.5206840981089838,
+          "additional_delta_v_m_s": 3.4629274800735623,
+          "max_altitude_error_km": 0.008636568054556846
+        },
+        {
+          "phase_deg": 90.0,
+          "delta_v_m_s": 3.5148639902010803,
+          "additional_delta_v_m_s": 3.457107372165659,
+          "max_altitude_error_km": 0.008637235611677169
+        },
+        {
+          "phase_deg": 135.0,
+          "delta_v_m_s": 3.4960824692828583,
+          "additional_delta_v_m_s": 3.438325851247437,
+          "max_altitude_error_km": 0.00863756999373436
+        },
+        {
+          "phase_deg": 180.0,
+          "delta_v_m_s": 3.5088556236908985,
+          "additional_delta_v_m_s": 3.451099005655477,
+          "max_altitude_error_km": 0.008635141052305699
+        },
+        {
+          "phase_deg": 225.0,
+          "delta_v_m_s": 3.523089738022868,
+          "additional_delta_v_m_s": 3.4653331199874464,
+          "max_altitude_error_km": 0.0086374891102314
+        },
+        {
+          "phase_deg": 270.0,
+          "delta_v_m_s": 3.4919687063708116,
+          "additional_delta_v_m_s": 3.43421208833539,
+          "max_altitude_error_km": 0.008637377738952637
+        },
+        {
+          "phase_deg": 315.0,
+          "delta_v_m_s": 3.4537552202788473,
+          "additional_delta_v_m_s": 3.395998602243426,
+          "max_altitude_error_km": 0.008634882301092148
+        }
+      ],
+      "checks": {
+        "j2_energy_relative": 6.287814713346052e-11,
+        "j2_angular_relative": 3.143740823219332e-11,
+        "j2_drop_linear_km": 3.1336160523656096,
+        "j2_drop_exact_km": 3.1336161741167308,
+        "j2_drop_simulated_km": 3.133626130498946,
+        "drag_rate_km_day": 7.266544986489593e-257,
+        "drag_loss_constant_density_km": 5.086581490542715e-256,
+        "drag_loss_varying_density_km": 0.0,
+        "drag_loss_simulated_km": 2.6730597019195556e-06
       },
       "dt_s": 120.0,
       "altitude_km": 35786.0
