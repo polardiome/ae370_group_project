@@ -1,8 +1,3 @@
-"""Reproduce the AE370 report: python simulation.py (NumPy and Matplotlib only).
-
-SI units throughout. Integrators are implemented here, without library ODE solvers.
-The JSON output contains all numerical values used to write the report.
-"""
 import json
 from pathlib import Path
 from time import perf_counter
@@ -27,7 +22,6 @@ FIG = Path(__file__).resolve().parent / "figures"
 
 
 def rhs(t, state, drag=False, j2=False, moon=False):
-    """Earth-centered inertial, equatorial equations; stationary atmosphere."""
     x, y, vx, vy = state
     r2 = x*x + y*y
     r = np.sqrt(r2)
@@ -68,12 +62,6 @@ def initial(altitude):
 
 
 def integrate(f, u0, end, dt, method=rk4, controlled=False):
-    """Uniform steps; maneuver times must align with the time grid.
-
-    After each 600 s coast, set velocity to the local central-plus-J2 circular tangential
-    velocity plus a radial component -(r-r_target)/3600. Position is continuous.
-    This is an assumed maintenance rule, not an optimal transfer calculation.
-    """
     n = int(round(end/dt))
     if not np.isclose(n*dt, end):
         raise ValueError("Duration must be an integer multiple of dt")
@@ -277,7 +265,6 @@ def main():
     report['experiments'], tracks = experiments()
     figures(tracks)
     (FIG.parent/'results.json').write_text(json.dumps(report, indent=2)+'\n')
-    print('Finished. Figures are in figures/; numerical values are in results.json.', flush=True)
 
 
 if __name__ == '__main__':
