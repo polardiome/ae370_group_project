@@ -29,7 +29,9 @@ We address the following questions with matched simulations at two altitudes:
 \end{enumerate}
 
 
-The full model is a nonlinear, time-dependent ODE with no known closed-form solution. Drag depends on altitude and speed, and the Moon's position changes with time. We therefore solve an initial value problem numerically. A simpler circular orbit with only central gravity has an exact solution, which we use to check the implementation.
+The goal of this project is to understand how atmospheric drag, Earth's gravitational field, and the Moon's gravity can change the satellite motion at different altitudes. In addition to that, we need to see how these impacts affect the correction needed in order to keep the orbit intact.
+
+In order to understand these problems, we consider the position and velocity of the satellite in an initial value problem (IVP). The entire system is nonlinear and time-dependent as the gravity force is dependent on the position, the atmosphere resistance force is dependent on the altitude and the velocity and the position of the moon is dependent on the time. Because of the lack of a closed form solution for the entire system, we use numerical solution to find the motion of the satellite.
 
 Let $\vect r=(x,y)^T$, $\vect v=(v_x,v_y)^T$, $r=|\vect r|$, and $h=r-R_E$. In an Earth-centered inertial frame, the state is
 \[
