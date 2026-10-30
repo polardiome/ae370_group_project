@@ -11,13 +11,12 @@
 {\Large AE 370 Group Project 1}\\[4pt]
 {\large Numerical study of a perturbed Earth orbit}\\[5pt]
 Jiho Seo, Pranshu Bhardwaj, Adi Jha, Dmitry Moryakov\\
-Fall 2026
 \end{center}
 
 \section{Premise and equations}
-Satellites orbiting Earth are affected by atmospheric drag, Earth's nonspherical gravitational field, and the Moon's gravity. These effects can change a satellite's trajectory and require corrective maneuvers to maintain its orbit. We numerically study these changes and estimate the required velocity corrections.
+Satellites orbiting Earth are affected by atmospheric drag, Earth's nonspherical gravitational field, and the Moon's gravity. These effects can change a satellite's trajectory and require corrective maneuvers to maintain its orbit. We will numerically study these changes and estimate the required velocity corrections.
 
-We address the following questions with matched simulations at two altitudes:
+We will address the following questions with matched simulations at two altitudes:
 \begin{enumerate}
 \setlength{\itemsep}{0pt}
 \setlength{\parskip}{0pt}
@@ -28,10 +27,9 @@ We address the following questions with matched simulations at two altitudes:
 \item How much additional corrective thrust is required to maintain the desired orbit when the Moon's gravity is included?
 \end{enumerate}
 
-
 The goal of this project is to understand how atmospheric drag, Earth's gravitational field, and the Moon's gravity can change the satellite motion at different altitudes. In addition to that, we need to see how these impacts affect the correction needed in order to keep the orbit intact.
 
-In order to understand these problems, we consider the position and velocity of the satellite in an initial value problem (IVP). The entire system is nonlinear and time-dependent as the gravity force is dependent on the position, the atmosphere resistance force is dependent on the altitude and the velocity and the position of the moon is dependent on the time. Because of the lack of a closed form solution for the entire system, we use numerical solution to find the motion of the satellite.
+In order to understand these problems, we will consider the position and velocity of the satellite in an initial value problem (IVP). The entire system is nonlinear and time-dependent as the gravity force is dependent on the position, the atmosphere resistance force is dependent on the altitude and the velocity and the position of the moon is dependent on the time. Because of the lack of a closed form solution for the entire system, we will use a numerical solution to find the motion of the satellite.
 
 Let $\vect r=(x,y)^T$, $\vect v=(v_x,v_y)^T$, $r=|\vect r|$, and $h=r-R_E$. In an Earth-centered inertial frame, the state is
 \[
@@ -44,7 +42,7 @@ The orbit is equatorial, with $z=0$. Central gravity and the equatorial $J_2$ co
 \vect a_g=-\frac{\mu_E}{r^3}\vect r,\qquad
 \vect a_{J_2}=-\frac{3J_2\mu_E R_E^2}{2r^5}\vect r.
 \]
-We assume a stationary atmosphere, so its relative velocity is $\vect v$:
+We will assume a stationary atmosphere, so its relative velocity is $\vect v$:
 \[
 \rho(h)=\rho_0 e^{-(h-h_0)/H},\qquad
 \vect a_d=-\frac{C_D A\rho(h)}{2m}|\vect v|\vect v.
@@ -59,10 +57,10 @@ The prescribed lunar orbit and third-body acceleration are
 \frac{\vect r_M-\vect r}{|\vect r_M-\vect r|^3}
 -\frac{\vect r_M}{D^3}\right].
 \]
-The second lunar term subtracts the Moon's acceleration of Earth's center. Omitting it would give the wrong Earth-centered equations. The lunar phase starts at zero. We neglect the Sun, atmospheric rotation, and changes in satellite mass. Maneuvers are modeled as velocity jumps between ODE integration intervals, as described in Section 6.
+The second lunar term subtracts the Moon's acceleration of Earth's center. Omitting it would give the wrong Earth-centered equations. The lunar phase will start at zero. We will neglect the Sun, atmospheric rotation, and changes in satellite mass. Maneuvers will be modeled as velocity jumps between ODE integration intervals, as described in Section 6.
 
 \section{Parameters and numerical method}
-All calculations use meters, seconds, and kilograms. The following are fixed model inputs, not fitted measurements. The density law is a simplified assumption rather than a detailed atmosphere model.
+All calculations will use meters, seconds, and kilograms. The following are fixed model inputs, not fitted measurements. The density law is a simplified assumption rather than a detailed atmosphere model.
 \begin{center}
 \begin{tabular}{ll@{\qquad}ll}
 \toprule
@@ -76,13 +74,13 @@ $\rho_0$ & $4\times10^{-12}$ kg/m$^3$ & $h_0$, $H$ & $400$ km, $60$ km\\
 \bottomrule
 \end{tabular}
 \end{center}
-We use initial altitudes of $300$ km (low) and $35{,}786$ km (high). Each uncontrolled comparison starts with $\vect u_0=(r_0,0,0,\sqrt{\mu_E/r_0})^T$, where $r_0=R_E+h_{\rm initial}$. This is circular for central gravity alone. It is deliberately the same initial state in every physical model, so it need not be circular after $J_2$ is added.
+We will use initial altitudes of $300$ km (low) and $35{,}786$ km (high). Each uncontrolled comparison will start with $\vect u_0=(r_0,0,0,\sqrt{\mu_E/r_0})^T$, where $r_0=R_E+h_{\rm initial}$. This is circular for central gravity alone. It will deliberately be the same initial state in every physical model, so it need not be circular after $J_2$ is added.
 
 From Lecture 10, integrate the ODE across a step:
 \[
 \vect u(t_{k+1})-\vect u(t_k)=\int_{t_k}^{t_{k+1}} f(t,\vect u(t))\,dt.
 \]
-Approximating this integral with staged slopes gives the classical RK4 method:
+Approximating this integral with staged slopes gives the classical RK4 method from Lecture 10:
 \begin{align*}
  k_1&=f(t_k,\vect u_k),&
  k_2&=f(t_k+\dt/2,\vect u_k+\dt k_1/2),\\
@@ -90,9 +88,45 @@ Approximating this integral with staged slopes gives the classical RK4 method:
  k_4&=f(t_k+\dt,\vect u_k+\dt k_3),\\
  \vect u_{k+1}&=\vect u_k+\frac{\dt}{6}(k_1+2k_2+2k_3+k_4).
 \end{align*}
-Each step evaluates these four slopes in order and then updates the state. The time-dependent Moon position is recomputed at each stage time. The integrator is written from scratch, with no outside ODE solver.
+Each step will evaluate these four slopes in order and then update the state. The time-dependent Moon position will be recomputed at each stage time.
 
-We decided to use RK4 as our main numerical method because it is a good balance between accuracy, stability, and computational costs. RK4 is a fourth order method, and Heun is a second order method, so RK4 has less errors for the same time step. Although RK4 has four function evaluations per step compared with two for Heun, its better accuracy makes the additional costs worthwhile. RK4 has a more suitable stability region for oscillatory problems, and Heun can introduce numerical growth for imaginary eigenvalues. We need a method that can accurately capture differences over several days. Therefore, we used RK4 for our main simulations and Heun for comparison.
+\subsection*{Deriving the RK4 weights}
+We keep Lecture 10's stage choices: two midpoint predictions using half steps,
+followed by an endpoint prediction using a full step. To derive the weights,
+write the update as $u_{k+1}=u_k+\dt(b_1k_1+b_2k_2+b_3k_3+b_4k_4)$.
+Following the Taylor-matching approach of Lecture 11, apply these stages to
+$\dot u=\lambda u$ and set $w=\lambda\dt$. Successive substitution gives
+\[
+\begin{aligned}
+ k_1&=\lambda u_k, & k_2&=\lambda u_k(1+w/2),\\
+ k_3&=\lambda u_k(1+w/2+w^2/4), &
+ k_4&=\lambda u_k(1+w+w^2/2+w^3/4).
+\end{aligned}
+\]
+The weighted update therefore becomes
+\[
+\frac{u_{k+1}}{u_k}
+=1+(b_1+b_2+b_3+b_4)w
++\left(\frac{b_2+b_3}{2}+b_4\right)w^2
++\left(\frac{b_3}{4}+\frac{b_4}{2}\right)w^3
++\frac{b_4}{4}w^4.
+\]
+Match this polynomial to the exact multiplier
+$e^w=1+w+w^2/2+w^3/6+w^4/24+O(w^5)$.
+Starting with the highest power makes the coefficients easy to solve:
+\begin{align*}
+ w^4:&\quad b_4/4=1/24 &&\Longrightarrow b_4=1/6,\\
+ w^3:&\quad b_3/4+b_4/2=1/6 &&\Longrightarrow b_3=1/3,\\
+ w^2:&\quad (b_2+b_3)/2+b_4=1/2 &&\Longrightarrow b_2=1/3,\\
+ w^1:&\quad b_1+b_2+b_3+b_4=1 &&\Longrightarrow b_1=1/6.
+\end{align*}
+Thus the weights are $(1,2,2,1)/6$, as used above. This calculation derives
+the weights for the chosen stages and checks fourth order on the linear
+test equation. A general nonlinear order proof requires additional Taylor
+terms; here we use the classical RK4 method from Lecture 10 and check its
+accuracy on the orbital equations by time-step refinement.
+
+We will use RK4 as our main numerical method because it is a good balance between accuracy, stability, and computational costs. RK4 is a fourth order method, and Heun is a second order method, so RK4 has less errors for the same time step. Although RK4 has four function evaluations per step compared with two for Heun, its better accuracy makes the additional costs worthwhile. RK4 has a more suitable stability region for oscillatory problems, and Heun can introduce numerical growth for imaginary eigenvalues. We need a method that can accurately capture differences over several days. Therefore, we will use RK4 for our main simulations and Heun for comparison.
 
 For comparison, Heun uses $k_1=f(t_k,\vect u_k)$ and a forward Euler prediction $\vect u^*=\vect u_k+\dt k_1$, followed by
 \[
@@ -104,15 +138,9 @@ Thus Heun matches $u(t+\dt)=u+\dt f+\dt^2(f_t+f_u f)/2+O(\dt^3)$: its one-step e
 
 Following Lecture 11, truncation error is the residual after substituting the exact solution, divided by $\dt$. For RK4 this is $O(\dt^4)$, rather than the undivided $O(\dt^5)$ step error. The numerical checks below test the expected global orders on the nonlinear orbital equations.
 
-\newpage
 \section{Stability and independent validation}
-For the lecture test equation $\dot u=\lambda u$, let $w=\dt\lambda$. Substitution into RK4 gives successive slopes proportional to
-\[
-\lambda u_k,\quad \lambda u_k(1+w/2),\quad
-\lambda u_k(1+w/2+w^2/4),\quad
-\lambda u_k(1+w+w^2/2+w^3/4).
-\]
-Collecting terms gives $u_{k+1}=R(w)u_k$, where
+For the lecture test equation $\dot u=\lambda u$, let $w=\dt\lambda$.
+Using the slopes and weights derived above gives $u_{k+1}=R(w)u_k$, where
 \[
 R_{\rm RK4}(w)=1+w+\frac{w^2}{2}+\frac{w^3}{6}+\frac{w^4}{24},
 \quad R_{\rm Heun}(w)=1+w+\frac{w^2}{2}.
@@ -133,9 +161,8 @@ For independent validation, remove drag, $J_2$, and the Moon. At $300$ km the ci
 \vect r(t)=r_0(\cos nt,\sin nt)^T,\qquad
 n=\sqrt{\mu_E/r_0^3},\qquad P=2\pi/n=5431.18\ \mathrm{s}.
 \]
-We compare over three periods using $E=\max_k|\vect r_k-\vect r(t_k)|$. The known solution checks correctness as well as convergence. We also check the specific energy $\epsilon=|\vect v|^2/2-\mu_E/r$ and specific angular momentum $\ell=xv_y-yv_x$, which must be constant in this special case. At the finest RK4 step, their maximum relative changes are $1.49\times10^{-12}$ and $7.45\times10^{-13}$.
+We will compare over three periods using $E=\max_k|\vect r_k-\vect r(t_k)|$. The known solution checks correctness as well as convergence. We will also check the specific energy $\epsilon=|\vect v|^2/2-\mu_E/r$ and specific angular momentum $\ell=xv_y-yv_x$, which must be constant in this special case. At the finest RK4 step, their maximum relative changes are $1.49\times10^{-12}$ and $7.45\times10^{-13}$.
 
-\newpage
 \section{Convergence and choice of time step}
 \begin{center}
 \includegraphics[width=\textwidth]{figures/validation.pdf}
@@ -158,7 +185,7 @@ $\dt$ (s) & Heun error (m) & RK4 error (m)\\
 \end{center}
 Using $p=\log_2(E(\dt)/E(\dt/2))$ on the last pair gives $p=2.03$ for Heun and $p=4.10$ for RK4. The rates approach the expected two and four. At equal cost of $7680$ evaluations, Heun's error is $4153$ m while RK4's is $0.0313$ m. The measured runtimes of these two short runs were about $0.015$ s and $0.017$ s; such short timings are machine dependent. Evaluation counts are the clearer comparison.
 
-For seven-day results we select $\dt=5$ s at low altitude and $120$ s at high altitude. The full model and the baseline are each repeated at half that step. The maximum coarse--fine differences at common times are:
+For seven-day results we will select $\dt=5$ s at low altitude and $120$ s at high altitude. The full model and the baseline will each be repeated at half that step. The maximum coarse--fine differences at common times are:
 \begin{center}
 \begin{tabular}{lrrr}
 \toprule
@@ -172,9 +199,8 @@ High & 0.3185 & 0.009618 & 0.000438\\
 \end{center}
 The last column compares $(\vect r_M-\vect r_B)$ between the two step sizes, where the subscripts here mean the full lunar run and baseline run. It checks the actual difference we interpret as the Moon's effect. These are numerical differences, not rigorous error bounds. Both the individual-run and paired differences are much smaller than the lunar signals reported next. For scale, $n\dt$ is about $0.0058$ in the low orbit and $0.0087$ in the high orbit. These are small relative to the imaginary-axis test limit, but the refinement check is still necessary.
 
-\newpage
 \section{Physical results over seven days}
-We compare central gravity alone, central gravity with drag, central gravity with $J_2$, and the baseline containing all three. A fifth run adds the Moon to the baseline. No corrections are applied in this section.
+We will compare central gravity alone, central gravity with drag, central gravity with $J_2$, and the baseline containing all three. A fifth run will add the Moon to the baseline. No corrections will be applied in this section.
 \begin{center}
 \includegraphics[width=.92\textwidth]{figures/earth_effects.pdf}
 \end{center}
@@ -187,7 +213,6 @@ Adding $J_2$ alone gives bounded radial oscillations, reaching $19.785$ km below
 
 With drag and $J_2$ together, the low altitude reaches a maximum departure of $38.542$ km from its initial value, ending at $270.427$ km. The combined behavior is not a simple sum: lower altitude increases the assumed density and hence the drag. At high altitude the baseline coincides with the $J_2$-only result.
 
-\newpage
 \subsection*{Adding lunar gravity}
 \begin{center}
 \includegraphics[width=.82\textwidth]{figures/lunar_effect.pdf}
@@ -209,13 +234,12 @@ The Moon changes the low-orbit altitude by at most about $5.5$ m relative to the
 
 This comparison uses the differential lunar acceleration, not the Moon's direct pull on the satellite alone. Both Earth and satellite respond to the Moon, and that common acceleration is removed. Over larger Earth-centered distances their lunar accelerations differ more strongly. This is consistent with the greater lunar effect in our high orbit.
 
-We also ran Heun on the full lunar model, comparing it with half-step RK4. At low altitude, its maximum position difference falls from $528.5$ km at $5$ s to $98.19$ km at $2.5$ s. At high altitude it falls from $209.9$ km at $120$ s to $49.91$ km at $60$ s. These errors exceed the lunar position signal. A smooth-looking trajectory at these steps would therefore be insufficient evidence of accuracy; method choice matters even when the run does not fail.
+We will also run Heun on the full lunar model, comparing it with half-step RK4. At low altitude, its maximum position difference falls from $528.5$ km at $5$ s to $98.19$ km at $2.5$ s. At high altitude it falls from $209.9$ km at $120$ s to $49.91$ km at $60$ s. These errors exceed the lunar position signal. A smooth-looking trajectory at these steps would therefore be insufficient evidence of accuracy; method choice matters even when the run does not fail.
 
 The half-step differences in Section 4 are below these signals. However, that only addresses integration error. It does not remove uncertainty caused by the circular Moon orbit, chosen initial phase, or simplified atmosphere. The results apply to this seven-day experiment rather than every satellite or lunar geometry.
 
-\newpage
 \section{A simple orbit-maintenance experiment}
-Every $600$ s we reset velocity while leaving position continuous. Let $r_0$ be the initial radius, $\vect e_r=\vect r/r$, and $\vect e_t=(-y,x)^T/r$. We prescribe
+Every $600$ s we will reset velocity while leaving position continuous. Let $r_0$ be the initial radius, $\vect e_r=\vect r/r$, and $\vect e_t=(-y,x)^T/r$. We will prescribe
 \[
 v_c(r)=\sqrt{\frac{\mu_E}{r}\left[1+\frac32 J_2\left(\frac{R_E}{r}\right)^2\right]},
 \qquad
@@ -226,7 +250,7 @@ The circular speed follows by setting $v_c^2/r$ equal to the magnitude of centra
 \Delta v_j=|\vect v^+-\vect v^-|,\qquad
 \Delta v_{\rm total}=\sum_j\Delta v_j.
 \]
-We use the same rule in the baseline and lunar runs. There are $1008$ corrections over seven days, including the correction at the final time. The rule maintains altitude, not a specified longitude or orbital phase. We use a $3$ km altitude band as a simple success criterion, checking the sampled trajectory between maneuvers as well as at them.
+We will use the same rule in the baseline and lunar runs. There will be $1008$ corrections over seven days, including the correction at the final time. The rule maintains altitude, not a specified longitude or orbital phase. We will use a $3$ km altitude band as a simple success criterion, checking the sampled trajectory between maneuvers as well as at them.
 \begin{center}
 \includegraphics[width=.90\textwidth]{figures/maintenance.pdf}
 \end{center}
@@ -245,7 +269,6 @@ Maximum lunar-run altitude error (km) & 2.29046 & 0.008638\\
 \end{tabular}
 \end{center}
 
-\newpage
 \section{Answers to the project questions}
 The answers below follow the numbering in the premise.
 \begin{enumerate}
@@ -263,11 +286,8 @@ The answers below follow the numbering in the premise.
 \subsection*{Limits of these answers}
 Halving the step changes the signed maneuver-cost differences by $1.15\times10^{-6}$ m/s at low altitude and $1.23\times10^{-5}$ m/s at high altitude, well below the reported changes. These checks address integration error, not physical-model uncertainty. The results use one lunar phase, a prescribed circular Moon orbit, a simplified atmosphere, and fixed satellite parameters. The planar model cannot describe orbital-plane changes. The impulse totals include adjustment from the initial central-gravity circular orbit to the $J_2$ model and are not optimal station-keeping costs.
 
-\newpage
 \section{Reproducibility and contributions}
 The submission contains \texttt{simulation.py}, \texttt{results.json}, the figures, this LaTeX source, and the compiled PDF. Running \texttt{python simulation.py} reproduces all calculations and figures. The integrators, checks, experiments, and plotting are separate functions within one script. Only NumPy and Matplotlib are required. To rebuild the PDF after generating the figures, compile \texttt{report.tex} with LaTeX. The complete source code, convergence tests, simulation results, and figures are available in our GitHub repository at \url{https://github.com/polardiome/ae370_group_project}.
-
-
 
 \subsection*{Group Contributions}
 
@@ -280,7 +300,6 @@ The submission contains \texttt{simulation.py}, \texttt{results.json}, the figur
 
     \item \textbf{Dmitry Moryakov (25\%):} Helped implement and validate the simulations, compare numerical methods, analyze the orbital behavior, and helped prepare the technical report.
 \end{itemize}
-
 
 \section*{Generative AI}
 OpenAI ChatGPT assisted with interpreting the supplied materials, planning the experiments, implementing and checking the code, producing figures, and drafting and compiling this report.
